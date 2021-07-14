@@ -46,6 +46,13 @@ echo "server {
     location    / {
         try_files \$uri \$uri/ =404;
     }
+
+    location ~ \.php\$ {
+        fastcgi_pass    unix:/run/php-fpm/www.sock;
+        fastcgi_param   SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
+        fastcgi_index   index.php;
+        include         fastcgi_params;
+    }
 }" | sudo tee -a /etc/nginx/sites-available/$1.conf > /dev/null
 
 
