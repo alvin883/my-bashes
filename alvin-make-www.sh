@@ -41,7 +41,7 @@ fi
 echo "server {
     listen      80;
     listen      [::]:80;
-    server_name test-another.local www.test-another.local;
+    server_name $1 www.$1;
     root        /var/www/$1;
     location    / {
         try_files \$uri \$uri/ =404;
@@ -50,7 +50,7 @@ echo "server {
 
 
 # linked the server-block configuration
-if [[ ! -f /etc/nginx/sites-available/$1.conf ]]; then
+if [[ ! -f /etc/nginx/sites-enabled/$1.conf ]]; then
     sudo ln -s /etc/nginx/sites-available/$1.conf /etc/nginx/sites-enabled/
     echo "linked /etc/nginx/sites-available/$1.conf"
 else
