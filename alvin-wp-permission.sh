@@ -2,10 +2,15 @@
 
 WP_OWNER=$USER # <-- wordpress owner
 WP_GROUP=users # <-- wordpress group
-WP_ROOT=/home/changeme # <-- wordpress root directory
+WP_ROOT=$1 # <-- wordpress root directory
 WS_GROUP=nginx # <-- webserver group
 
-read -p "Enter wordpress directory: " WP_ROOT
+if [ -z "$1" ]; then
+    read -p "Enter wordpress directory: " WP_ROOT
+else
+    WP_ROOT=$1
+fi
+
 
 # reset to safe defaults
 sudo find ${WP_ROOT} -exec chown ${WP_OWNER}:${WP_GROUP} {} \;
@@ -25,3 +30,5 @@ sudo chmod 664 ${WP_ROOT}/.htaccess
 sudo find ${WP_ROOT}/wp-content -exec chgrp ${WS_GROUP} {} \;
 sudo find ${WP_ROOT}/wp-content -type d -exec chmod 775 {} \;
 sudo find ${WP_ROOT}/wp-content -type f -exec chmod 664 {} \;
+
+echo "completed: alvin-wp-permission.sh"
