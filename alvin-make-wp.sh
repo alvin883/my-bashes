@@ -1,6 +1,8 @@
 #! /usr/bin/env bash
 
+
 MY_HOSTNAME=""
+OPTIONS_NO_CREATE_DB=false
 
 # get WORDPRESS_SOURCE_PATH from .env file
 # $0 is the path of the current executed scripts
@@ -9,14 +11,49 @@ DIR_PATH=$(dirname ${FULL_PATH})
 WORDPRESS_SOURCE_PATH=$(grep WORDPRESS_SOURCE_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
 
 
-# check whether the user input MY_HOSTNAME or not 
-if [ -z "$1" ]; then
+Help() {
+    echo ""
+    echo "--------------------------------------------------------------------------------"
+    echo "Available options:"
+    echo "--no-create-database"
+    echo "--hostname            : to specify the hostname in one line (without .local)"
+    echo "--------------------------------------------------------------------------------"
+    echo ""
+}
+
+
+# get options
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+    --hostname)
+        MY_HOSTNAME=$2
+        shift
+        ;;
+    --no-create-database)
+        OPTIONS_NO_CREATE_DB=true
+        shift
+        ;;
+    --help)
+        Help
+        exit
+        ;;
+    *)
+        shift
+        ;;
+    esac
+done
+
+
+# check if hostname is already filled or not
+hostname_length=$(expr length "$MY_HOSTNAME")
+if [ $hostname_length -gt 0 ] ; then
+    # hostname has been filled
+    echo -e "\n"
+    echo "Enter the hostname (without .local): " ${MY_HOSTNAME}
+else
+    # hostname is empty
     echo -e "\n"
     read -p "Enter the hostname (without .local): " MY_HOSTNAME
-else
-    echo -e "\n"
-    MY_HOSTNAME=$1
-    echo "Enter the hostname: " ${MY_HOSTNAME}
 fi
 
 
@@ -36,7 +73,7 @@ echo "running ..."
 
 
 # make www
-echo "run alvin-make-wp.sh ..."
+echo "run alvin-make-www.sh ..."
 alvin-make-www.sh ${MY_RAW_HOSTNAME}
 echo -e "\n\n"
 echo "run wordpress related setup ..."
@@ -65,8 +102,10 @@ sudo ln -s /usr/share/phpMyAdmin /var/www/${MY_HOSTNAME}/phpmyadmin
 echo "done: symlink phpmyadmin"
 
 # create empty database
-sudo mysql -u root -e "create database \`$MY_DB_NAME\`"
-echo "done: create database"
+if [ "$OPTIONS_NO_CREATE_DB" = false ] ; then
+    sudo mysql -u root -e "create database \`$MY_DB_NAME\`"
+    echo "done: create database"
+fi
 
 echo "wordpress site: ${MY_HOSTNAME}"
 echo -e "completed: alvin-make-wp.sh"
