@@ -14,7 +14,7 @@ fi
 
 # proper SELinux permission
 # reference: https://wordpress.org/support/topic/unable-to-update-wordpress-4-9-4-to-4-9-6/
-chcon -R -t httpd_sys_rw_content_t ${WP_ROOT}
+sudo chcon -R -t httpd_sys_rw_content_t ${WP_ROOT}
 echo "done: set SELinux permission"
 
 # reset to safe defaults
