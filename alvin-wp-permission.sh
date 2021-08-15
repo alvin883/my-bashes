@@ -75,4 +75,8 @@ sudo find ${WP_ROOT}/wp-load.php -type d -exec chmod 775 {} \;
 sudo find ${WP_ROOT}/wp-load.php -type f -exec chmod 664 {} \;
 echo "done: allow wordpress to manage wp-load.php"
 
+# reference: https://unix.stackexchange.com/a/109487
+find ${WP_ROOT}/wp-content/themes/ -path "*/node_modules/*" -exec chmod 755 {} \;
+echo "done: allow node_modules to be executable to the user, not to wordpress"
+
 echo "completed: alvin-wp-permission.sh"
