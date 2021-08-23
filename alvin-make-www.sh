@@ -48,7 +48,7 @@ echo "server {
     server_name ${MY_HOSTNAME} www.${MY_HOSTNAME};
     root        /var/www/${MY_HOSTNAME};
     location    / {
-        try_files \$uri \$uri/ =404;
+        try_files \$uri \$uri/ /index.php?$args =404;
     }
 
     location ~ \.php\$ {
