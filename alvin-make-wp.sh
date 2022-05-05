@@ -8,7 +8,11 @@ OPTIONS_NO_CREATE_DB=false
 # $0 is the path of the current executed scripts
 FULL_PATH=$(realpath $0)
 DIR_PATH=$(dirname ${FULL_PATH})
+CURRENT_DIR=$PWD
 WORDPRESS_SOURCE_PATH=$(grep WORDPRESS_SOURCE_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
+NGINX_PATH=$(grep NGINX_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
+WWW_PATH=$(grep WWW_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
+PHPMYADMIN_PATH=$(grep PHPMYADMIN_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
 
 
 Help() {
@@ -79,26 +83,26 @@ echo -e "\n\n"
 echo "run wordpress related setup ..."
 
 # copy wordpress files
-sudo cp -r ${WORDPRESS_SOURCE_PATH} /var/www/${MY_HOSTNAME}
+sudo cp -r "${WORDPRESS_SOURCE_PATH}/*" ${WWW_PATH}/${MY_HOSTNAME}
 echo "done: copy wordpress files"
 
 # copy wp-config.php
-sudo cp /home/alvin/Documents/my-bashes/alvin-make-wp.wp-config.php /var/www/${MY_HOSTNAME}/wp-config.php
+sudo cp ${CURRENT_DIR}/alvin-make-wp.wp-config.php ${WWW_PATH}/${MY_HOSTNAME}/wp-config.php
 echo "done: copy wp-config.php"
 
 # change the directory to a correct WP files permission
 echo "run alvin-wp-permission.sh ..."
-alvin-wp-permission.sh /var/www/${MY_HOSTNAME}
+alvin-wp-permission.sh ${WWW_PATH}/${MY_HOSTNAME}
 echo "done: change correct permission"
 
 # rename all the config in wp-config.php
-sudo sed -i "s/CLI_DATABASE_NAME/${MY_DB_NAME}/g" /var/www/${MY_HOSTNAME}/wp-config.php
-sudo sed -i "s/CLI_DATABASE_USER/root/g" /var/www/${MY_HOSTNAME}/wp-config.php
-sudo sed -i "s/CLI_DATABASE_PASSWORD/${MY_DB_ROOT_PASS}/g" /var/www/${MY_HOSTNAME}/wp-config.php
+sudo sed -i "s/CLI_DATABASE_NAME/${MY_DB_NAME}/g" ${WWW_PATH}/${MY_HOSTNAME}/wp-config.php
+sudo sed -i "s/CLI_DATABASE_USER/root/g" ${WWW_PATH}/${MY_HOSTNAME}/wp-config.php
+sudo sed -i "s/CLI_DATABASE_PASSWORD/${MY_DB_ROOT_PASS}/g" ${WWW_PATH}/${MY_HOSTNAME}/wp-config.php
 echo "done: setup wp-config.php file"
 
 # symlink phpMyAdmin
-sudo ln -s /usr/share/phpMyAdmin /var/www/${MY_HOSTNAME}/phpmyadmin
+sudo ln -s ${PHPMYADMIN_PATH} ${WWW_PATH}/${MY_HOSTNAME}/phpmyadmin
 echo "done: symlink phpmyadmin"
 
 # create empty database

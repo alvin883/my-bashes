@@ -1,6 +1,8 @@
 #! /usr/bin/env bash
 
 MY_HOSTNAME=""
+WWW_PATH=$(grep WWW_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
+NGINX_PATH=$(grep NGINX_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
 
 # check whether the user input MY_HOSTNAME or not 
 if [ -z "$1" ]; then
@@ -16,13 +18,13 @@ fi
 MY_HOSTNAME=${MY_HOSTNAME}\.local
 
 # delete www folder
-sudo rm -r /var/www/${MY_HOSTNAME}
-echo "done: deleted /var/www/${MY_HOSTNAME} folder"
+sudo rm -r ${WWW_PATH}/${MY_HOSTNAME}
+echo "done: deleted ${WWW_PATH}/${MY_HOSTNAME} folder"
 
 # delete nginx server-block config
-sudo rm /etc/nginx/sites-enabled/${MY_HOSTNAME}.conf
-sudo rm /etc/nginx/sites-available/${MY_HOSTNAME}.conf
-echo "done: deleted /etc/nginx/sites-available/${MY_HOSTNAME}.conf"
+sudo rm ${NGINX_PATH}/sites-enabled/${MY_HOSTNAME}.conf
+sudo rm ${NGINX_PATH}/sites-available/${MY_HOSTNAME}.conf
+echo "done: deleted ${NGINX_PATH}/sites-available/${MY_HOSTNAME}.conf"
 
 # delete dns line from the hosts file
 sudo sed -i "/${MY_HOSTNAME}/d" /etc/hosts

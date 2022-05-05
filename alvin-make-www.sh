@@ -1,6 +1,9 @@
 #! /bin/bash
 
 MY_HOSTNAME=""
+WWW_PATH=$(grep WWW_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
+NGINX_PATH=$(grep NGINX_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
+
 
 # check whether the user input domain name or not 
 if [ -z "$1" ]; then
@@ -18,25 +21,25 @@ MY_HOSTNAME=${MY_HOSTNAME}\.local
 
 
 # make www folder if it doesn't exist
-if [ ! -d /var/www/${MY_HOSTNAME} ]; then
-    sudo mkdir /var/www/${MY_HOSTNAME}
-    echo "created /var/www/${MY_HOSTNAME}"
+if [ ! -d ${WWW_PATH}/${MY_HOSTNAME} ]; then
+    sudo mkdir ${WWW_PATH}/${MY_HOSTNAME}
+    echo "created ${WWW_PATH}/${MY_HOSTNAME}"
 fi
 
 
 # change ownership of the folder into current user, so they can change the code
 # without the need of sudo 
-sudo chmod -R 755 /var/www/${MY_HOSTNAME}
-sudo chown -R $USER:$USER /var/www/${MY_HOSTNAME}
-echo "done: change owner of /var/www/${MY_HOSTNAME}"
+sudo chmod -R 755 ${WWW_PATH}/${MY_HOSTNAME}
+sudo chown -R $USER:$USER ${WWW_PATH}/${MY_HOSTNAME}
+echo "done: change owner of ${WWW_PATH}/${MY_HOSTNAME}"
 
 
 # make nginx server-block configuration file if it doesn't exist
-if [[ ! -f /etc/nginx/sites-available/${MY_HOSTNAME}.conf ]]; then
-    sudo touch /etc/nginx/sites-available/${MY_HOSTNAME}.conf
-    echo "done: create /etc/nginx/sites-available/${MY_HOSTNAME}.conf"
+if [[ ! -f ${NGINX_PATH}/sites-available/${MY_HOSTNAME}.conf ]]; then
+    sudo touch ${NGINX_PATH}/sites-available/${MY_HOSTNAME}.conf
+    echo "done: create ${NGINX_PATH}/sites-available/${MY_HOSTNAME}.conf"
 else 
-    echo "FAILED: create /etc/nginx/sites-available/${MY_HOSTNAME}.conf"
+    echo "FAILED: create ${NGINX_PATH}/sites-available/${MY_HOSTNAME}.conf"
     echo "------- server-block configuration already exist"
 fi
 
@@ -46,7 +49,7 @@ echo "server {
     listen      80;
     listen      [::]:80;
     server_name ${MY_HOSTNAME} www.${MY_HOSTNAME};
-    root        /var/www/${MY_HOSTNAME};
+    root        ${WWW_PATH}/${MY_HOSTNAME};
     location    / {
         try_files \$uri \$uri/ /index.php?$args =404;
     }
@@ -57,16 +60,16 @@ echo "server {
         fastcgi_index   index.php;
         include         fastcgi_params;
     }
-}" | sudo tee -a /etc/nginx/sites-available/${MY_HOSTNAME}.conf > /dev/null
-echo "done: setup /etc/nginx/sites-available/${MY_HOSTNAME}.conf"
+}" | sudo tee -a ${NGINX_PATH}/sites-available/${MY_HOSTNAME}.conf > /dev/null
+echo "done: setup ${NGINX_PATH}/sites-available/${MY_HOSTNAME}.conf"
 
 
 # linked the server-block configuration
-if [[ ! -f /etc/nginx/sites-enabled/${MY_HOSTNAME}.conf ]]; then
-    sudo ln -s /etc/nginx/sites-available/${MY_HOSTNAME}.conf /etc/nginx/sites-enabled/
-    echo "done: link sites-enabled for /etc/nginx/sites-available/${MY_HOSTNAME}.conf"
+if [[ ! -f ${NGINX_PATH}/sites-enabled/${MY_HOSTNAME}.conf ]]; then
+    sudo ln -s ${NGINX_PATH}/sites-available/${MY_HOSTNAME}.conf ${NGINX_PATH}/sites-enabled/
+    echo "done: link sites-enabled for ${NGINX_PATH}/sites-available/${MY_HOSTNAME}.conf"
 else
-    echo "FAILED: link sites-enabled for /etc/nginx/sites-available/${MY_HOSTNAME}.conf"
+    echo "FAILED: link sites-enabled for ${NGINX_PATH}/sites-available/${MY_HOSTNAME}.conf"
     echo "------- server-block configuration has been linked"
 fi
 
