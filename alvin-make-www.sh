@@ -1,8 +1,11 @@
 #! /bin/bash
 
 MY_HOSTNAME=""
-WWW_PATH=$(grep WWW_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
-NGINX_PATH=$(grep NGINX_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
+FULL_PATH=$(realpath $0)
+DIR_PATH=$(dirname ${FULL_PATH})
+WWW_PATH=$(grep WWW_PATH ${DIR_PATH}/.env | cut -d '=' -f 2-)
+NGINX_PATH=$(grep NGINX_PATH ${DIR_PATH}/.env | cut -d '=' -f 2-)
+PHP_FPM=$(grep PHP_FPM ${DIR_PATH}/.env | cut -d '=' -f 2-)
 
 
 # check whether the user input domain name or not 
@@ -50,12 +53,13 @@ echo "server {
     listen      [::]:80;
     server_name ${MY_HOSTNAME} www.${MY_HOSTNAME};
     root        ${WWW_PATH}/${MY_HOSTNAME};
+
     location    / {
         try_files \$uri \$uri/ /index.php?$args =404;
     }
 
     location ~ \.php\$ {
-        fastcgi_pass    unix:/run/php-fpm/www.sock;
+        fastcgi_pass    ${PHP_FPM};
         fastcgi_param   SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         fastcgi_index   index.php;
         include         fastcgi_params;

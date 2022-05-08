@@ -9,10 +9,10 @@ OPTIONS_NO_CREATE_DB=false
 FULL_PATH=$(realpath $0)
 DIR_PATH=$(dirname ${FULL_PATH})
 CURRENT_DIR=$PWD
-WORDPRESS_SOURCE_PATH=$(grep WORDPRESS_SOURCE_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
-NGINX_PATH=$(grep NGINX_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
-WWW_PATH=$(grep WWW_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
-PHPMYADMIN_PATH=$(grep PHPMYADMIN_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
+WORDPRESS_SOURCE_PATH=$(grep WORDPRESS_SOURCE_PATH ${DIR_PATH}/.env | cut -d '=' -f 2-)
+NGINX_PATH=$(grep NGINX_PATH ${DIR_PATH}/.env | cut -d '=' -f 2-)
+WWW_PATH=$(grep WWW_PATH ${DIR_PATH}/.env | cut -d '=' -f 2-)
+PHPMYADMIN_PATH=$(grep PHPMYADMIN_PATH ${DIR_PATH}/.env | cut -d '=' -f 2-)
 
 
 Help() {

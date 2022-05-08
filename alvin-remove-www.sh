@@ -1,8 +1,8 @@
 #! /usr/bin/env bash
 
 MY_HOSTNAME=""
-WWW_PATH=$(grep WWW_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
-NGINX_PATH=$(grep NGINX_PATH ${DIR_PATH}/alvin-make-wp.env | cut -d '=' -f 2-)
+WWW_PATH=$(grep WWW_PATH ${DIR_PATH}/.env | cut -d '=' -f 2-)
+NGINX_PATH=$(grep NGINX_PATH ${DIR_PATH}/.env | cut -d '=' -f 2-)
 
 # check whether the user input MY_HOSTNAME or not 
 if [ -z "$1" ]; then
