@@ -6,6 +6,8 @@ DIR_PATH=$(dirname ${FULL_PATH})
 WWW_PATH=$(grep WWW_PATH ${DIR_PATH}/.env | cut -d '=' -f 2-)
 NGINX_PATH=$(grep NGINX_PATH ${DIR_PATH}/.env | cut -d '=' -f 2-)
 PHP_FPM=$(grep PHP_FPM ${DIR_PATH}/.env | cut -d '=' -f 2-)
+CURRENT_USER=${USER}
+CURRENT_GROUP=$(id -gn)
 
 
 # check whether the user input domain name or not 
@@ -33,7 +35,7 @@ fi
 # change ownership of the folder into current user, so they can change the code
 # without the need of sudo 
 sudo chmod -R 755 ${WWW_PATH}/${MY_HOSTNAME}
-sudo chown -R $USER:$USER ${WWW_PATH}/${MY_HOSTNAME}
+sudo chown -R $CURRENT_USER:$CURRENT_GROUP ${WWW_PATH}/${MY_HOSTNAME}
 echo "done: change owner of ${WWW_PATH}/${MY_HOSTNAME}"
 
 
@@ -90,9 +92,16 @@ else
     echo "done: add dns ${MY_HOSTNAME} to the hosts file"
 fi
 
+
 # restart Nginx
-sudo systemctl restart nginx
-echo "done: nginx restarted"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Mac OSX
+    brew services restart nginx
+    echo "done: nginx restarted"
+else
+    sudo systemctl restart nginx
+    echo "done: nginx restarted"
+fi
 
 
 echo "hostname: ${MY_HOSTNAME}"
