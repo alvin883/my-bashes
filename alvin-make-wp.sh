@@ -95,10 +95,18 @@ alvin-wp-permission.sh ${WWW_PATH}/${MY_HOSTNAME}
 echo "done: change correct permission"
 
 # rename all the config in wp-config.php
-sudo sed -i "" "s/CLI_DATABASE_NAME/${MY_DB_NAME}/g" ${WWW_PATH}/${MY_HOSTNAME}/wp-config.php
-sudo sed -i "" "s/CLI_DATABASE_USER/root/g" ${WWW_PATH}/${MY_HOSTNAME}/wp-config.php
-sudo sed -i "" "s/CLI_DATABASE_PASSWORD/${MY_DB_ROOT_PASS}/g" ${WWW_PATH}/${MY_HOSTNAME}/wp-config.php
-echo "done: setup wp-config.php file"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    # Mac OSX
+    sudo sed -i "" "s/CLI_DATABASE_NAME/${MY_DB_NAME}/g" ${WWW_PATH}/${MY_HOSTNAME}/wp-config.php
+    sudo sed -i "" "s/CLI_DATABASE_USER/root/g" ${WWW_PATH}/${MY_HOSTNAME}/wp-config.php
+    sudo sed -i "" "s/CLI_DATABASE_PASSWORD/${MY_DB_ROOT_PASS}/g" ${WWW_PATH}/${MY_HOSTNAME}/wp-config.php
+    echo "done: setup wp-config.php file"
+else
+    sudo sed -i "s/CLI_DATABASE_NAME/${MY_DB_NAME}/g" ${WWW_PATH}/${MY_HOSTNAME}/wp-config.php
+    sudo sed -i "s/CLI_DATABASE_USER/root/g" ${WWW_PATH}/${MY_HOSTNAME}/wp-config.php
+    sudo sed -i "s/CLI_DATABASE_PASSWORD/${MY_DB_ROOT_PASS}/g" ${WWW_PATH}/${MY_HOSTNAME}/wp-config.php
+    echo "done: setup wp-config.php file"
+fi
 
 # symlink phpMyAdmin
 sudo ln -s ${PHPMYADMIN_PATH} ${WWW_PATH}/${MY_HOSTNAME}/phpmyadmin
