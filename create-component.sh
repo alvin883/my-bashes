@@ -4,6 +4,7 @@
 ccomp_main_mui() {
 cat <<EOF
 import { Box } from "@mui/material";
+import { ${CCOMP_NAME}Styles as s } from './${CCOMP_NAME}.styles';
 
 export const ${CCOMP_NAME} = ({}: ${CCOMP_NAME}Props) => {
   return (
@@ -35,7 +36,7 @@ EOF
 # -------------------------------------------------------------------------
 ccomp_index_mui() {
 cat <<EOF
-export * from "./${CCOMP_NAME}.tsx";
+export * from "./${CCOMP_NAME}";
 EOF
 }
 
