@@ -26,7 +26,7 @@ cat <<EOF
 import { asStyles } from "src/types";
 
 export const ${CCOMP_NAME}Styles = asStyles({
-    root: {},
+  root: {},
 });
 EOF
 }
@@ -88,6 +88,6 @@ ccomp() {
     fi
 
     echo "${CCOMP_MAIN}" > "${CCOMP_INDEX_PATH}${CCOMP_NAME}.tsx"
-    echo "${CCOMP_STYLE}" > "${CCOMP_INDEX_PATH}${CCOMP_NAME}.styles.tsx"
-    echo "${CCOMP_INDEX}" > "${CCOMP_INDEX_PATH}index.tsx"
+    echo "${CCOMP_STYLE}" > "${CCOMP_INDEX_PATH}${CCOMP_NAME}.styles.ts"
+    echo "${CCOMP_INDEX}" > "${CCOMP_INDEX_PATH}index.ts"
 }
