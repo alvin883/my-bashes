@@ -51,17 +51,21 @@ ccomp() {
 
     while [[ "$#" -gt 0 ]]; do
         case "$1" in
-        -a)
+        "-a")
             CCOMP_DIR_RAW="src/components/atoms/"
             shift
             ;;
-        -m)
+        "-m")
             CCOMP_DIR_RAW="src/components/molecules/"
             shift
             ;;
-        -o)
+        "-o")
             CCOMP_DIR_RAW="src/components/organisms/"
-            exit
+            shift
+            ;;
+        "-p")
+            CCOMP_DIR_RAW="src/pages/"
+            shift
             ;;
         *)
             CCOMP_NAME="$1"
